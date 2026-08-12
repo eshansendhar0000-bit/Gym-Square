@@ -1,0 +1,46 @@
+// Gym Square — Prisma schema
+// Run `npx prisma migrate dev --name init` after DATABASE_URL is configured.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+  PREFER_NOT_TO_SAY
+}
+
+enum FitnessAim {
+  WEIGHT_MANAGEMENT
+  MUSCLE_BUILDING
+  STRENGTH
+  GENERAL_FITNESS
+  ENDURANCE
+  SPORTS_PERFORMANCE
+  FLEXIBILITY_MOBILITY
+  OTHER
+}
+
+model Member {
+  id           String     @id @default(cuid())
+  name         String
+  age          Int
+  gender       Gender
+  aim          FitnessAim
+  mobileNumber String
+  email        String
+
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@index([aim])
+  @@index([createdAt])
+  @@unique([mobileNumber, email], name: "mobileNumber_email")
+}
